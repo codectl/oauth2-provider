@@ -1,0 +1,7 @@
+Authlib
+Flask
+Flask-Login
+flask-restplus
+Flask-SQLAlchemy
+python-dotenv
+Werkzeug==0.16.1
