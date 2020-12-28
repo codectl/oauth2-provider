@@ -13,7 +13,7 @@ class Role(db.Model):
     permissions = db.relationship(Permission, secondary='role_permission')
 
 
-db.Table(
+RolePermission = db.Table(
     'role_permission',
     db.Model.metadata,
     db.Column('role_id', db.Integer, db.ForeignKey(Role.id, ondelete='CASCADE'), primary_key=True),

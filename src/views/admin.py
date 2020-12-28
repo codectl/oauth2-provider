@@ -1,9 +1,5 @@
-import time
+from flask import Blueprint, render_template
 
-from flask import Blueprint, redirect, render_template, request
-from werkzeug.security import gen_salt
-
-from src import db
 from src.models.OAuth2Client import OAuth2Client
 from src.services.user import UserService
 
@@ -11,7 +7,7 @@ admin = Blueprint(__name__, 'admin')
 
 
 @admin.route('/', methods=('GET', 'POST'))
-def admin_home():
+def index():
     user = UserService.current_user()
 
     if 'admin' not in user.roles:
