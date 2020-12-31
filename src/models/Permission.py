@@ -9,6 +9,9 @@ class Permission(db.Model):
     description = db.Column(db.String(100), nullable=True)
     read_only = db.Column(db.Boolean, nullable=False, default=True)
 
+    def __repr__(self):
+        return '<Permission {0}>'.format(self.id)
+
     @property
     def scope(self):
         return ''.join(('read' if self.read_only else 'write', ':', self.name))

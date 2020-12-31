@@ -28,6 +28,10 @@ class RoleService:
         query = Role.query.filter_by(**filters)
         return query.all() if not fetch_one else query.one_or_none()
 
+    @classmethod
+    def default_role(cls):
+        return cls.find_by(name='User', fetch_one=True)
+
     @staticmethod
     def create_role_permission(**kwargs) -> RolePermission:
         role_permission = RolePermission(**kwargs)

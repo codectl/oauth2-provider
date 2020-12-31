@@ -16,7 +16,7 @@ class User(OAuth2ResourceOwner):
     last_login_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
 
     # Relationships
-    roles = db.relationship(Role, secondary='user_role', lazy="dynamic")
+    roles = db.relationship(Role, secondary='user_role')
 
     __mapper_args__ = {
         'polymorphic_identity': 'user'
@@ -43,8 +43,13 @@ class User(OAuth2ResourceOwner):
 
         return str(self.id)
 
-    def __str__(self):
-        return self.__dict__
+    def has_roles(self, *role_names):
+        """ Check whether the user is part of all of the given roles. """
+
+        return all(role_name in [role.name for role in self.roles] for role_name in role_names)
+
+    def __repr__(self):
+        return '<User {0}>'.format(self.id)
 
 
 UserRole = db.Table(

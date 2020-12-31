@@ -12,6 +12,9 @@ class Role(db.Model):
     # Relationships
     permissions = db.relationship(Permission, secondary='role_permission')
 
+    def __repr__(self):
+        return '<Role {0}>'.format(self.id)
+
 
 RolePermission = db.Table(
     'role_permission',

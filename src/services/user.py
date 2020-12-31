@@ -55,13 +55,6 @@ class UserService:
         # return UserService.create(username=username)
         return True
 
-    @classmethod
-    def current_user(cls):
-        """
-        Retrieve user in session.
-        """
-        return cls.get(session.get('id'))
-
     @staticmethod
     def create_user_role(**kwargs) -> UserRole:
         user_role = UserRole(**kwargs)
