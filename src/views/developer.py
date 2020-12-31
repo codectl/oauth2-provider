@@ -7,29 +7,24 @@ from src import db
 from src.models.OAuth2Client import OAuth2Client
 from src.services.user import UserService
 
-developer = Blueprint(__name__, 'developer')
+developer = Blueprint('developer', __name__)
 
 
-@developer.route('/', methods=('GET', 'POST'))
-def developer_home():
+@developer.route('/me', methods=('GET', 'POST'))
+def index():
     user = UserService.current_user()
 
-    if user:
-        clients = OAuth2Client.query.filter_by(user_id=user.id).all()
-    else:
-        clients = []
+    clients = OAuth2Client.query.filter_by(user_id=user.id).all()
 
-    return render_template('home.html', user=user, clients=clients)
+    return render_template('pages/developer/index.html', user=user, clients=clients)
 
 
-@developer.route('/client', methods=('GET', 'POST'))
+@developer.route('/me/clients', methods=['POST'])
 def client_application():
-    user = current_user()
+    user = UserService.current_user()
 
     if not user:
         return redirect('/')
-    if request.method == 'GET':
-        return render_template('client.html')
 
     client_id = gen_salt(24)
     client_id_issued_at = int(time.time())

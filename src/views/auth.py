@@ -4,7 +4,7 @@ from flask_login import current_user, login_user
 from src import login_manager
 from src.services.user import UserService
 
-auth = Blueprint(__name__, 'auth')
+auth = Blueprint('auth', __name__)
 
 
 def login_not_required(f):
@@ -22,8 +22,9 @@ def load_user(user_id):
 
 
 @auth.route('/')
+@login_not_required
 def index():
-    return render_template('index.html')
+    return redirect(url_for('auth.login'))
 
 
 @auth.route('/login', methods=('GET', 'POST'))
@@ -54,9 +55,9 @@ def login():
         if next_page:
             return redirect(next_page)
 
-        return redirect(url_for('home.index'))
+        return redirect(url_for('user.me'))
     else:
-        return render_template('authenticate.html')
+        return render_template('pages/auth/authenticate.html')
 
 
 def resource_authorization():
