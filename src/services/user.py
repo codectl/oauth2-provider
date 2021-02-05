@@ -16,13 +16,12 @@ class UserService:
         db.session.add(user)
         db.session.commit()
 
-        current_app.logger.info("Created user '{0}'.".format(user.id))
+        current_app.logger.info("Created user '{0}'.".format(user.username))
 
         # Setting default role for this user
         default_role = RoleService.default_role()
         if default_role:
-            UserService.create_user_role(user_id=user.id,
-                                         role_id=default_role.id)
+            user.roles.append(default_role)
 
         return user
 
@@ -43,7 +42,8 @@ class UserService:
                 setattr(user, key, value)
         db.session.commit()
 
-        current_app.logger.info("Updated user id '{0}' with the following attributes.".format(user.id, kwargs))
+        current_app.logger.info("Updated user '{0}' with the following attributes: '{1}'."
+                                .format(user.username, kwargs))
 
     @staticmethod
     def authenticate(username, password):

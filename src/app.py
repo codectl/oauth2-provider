@@ -7,6 +7,7 @@ from src import db, login_manager
 from src.namespaces.oauth2 import oauth2_namespace
 from src.oauth2 import config_oauth
 from src.settings.config import config_by_name
+from src.settings.seed import seed
 from src.views.api import api, restful_api
 from src.views.admin import admin
 from src.views.auth import auth, resource_authorization
@@ -38,6 +39,7 @@ def setup_app(app):
     """
     Setup the app
     """
+    from flask.logging import default_handler
 
     # Link db to app
     db.init_app(app)
@@ -49,9 +51,10 @@ def setup_app(app):
     # Create tables if they do not exist already
     with app.app_context():
         db.create_all()
+        seed()
 
     # Redirect root point to app context root
-    app.add_url_rule('/', 'index', lambda: redirect(app.config['APP_ROOT']))
+    app.add_url_rule('/', 'index', lambda: redirect('auth.login'))
 
     # Initialize and configure OAuth2
     config_oauth(app)

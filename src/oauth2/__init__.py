@@ -9,13 +9,13 @@ from authlib.integrations.sqla_oauth2 import (
 from src import db
 from src.models.OAuth2Client import OAuth2Client
 from src.models.OAuth2Token import OAuth2Token
-from src.oauth2.OAuth2Grants import (
+from src.oauth2.grants.OAuth2Grants import (
     grants,
     AuthorizationCodeGrant,
     PasswordGrant,
     RefreshTokenGrant
 )
-from src.oauth2.OpenIDCGrants import (
+from src.oauth2.grants.OpenIDCGrants import (
     OpenIDCode,
     OpenIDHybridGrant,
     OpenIDImplicitGrant

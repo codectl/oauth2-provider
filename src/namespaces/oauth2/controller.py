@@ -1,8 +1,8 @@
 from flask import render_template, redirect, request, url_for
+from flask_login import current_user
 from flask_restplus import Namespace, Resource
 
 from src.oauth2 import authorization
-from src.services.user import UserService
 
 ns = Namespace('oauth2', description='OAuth2 requests.')
 
@@ -11,22 +11,17 @@ ns = Namespace('oauth2', description='OAuth2 requests.')
 class Authorize(Resource):
 
     def get(self):
-        user = UserService.current_user()
-
         # Login is required since we need to know the current resource owner.
-        if user:
-            grant = authorization.validate_consent_request(end_user=user)
+        if current_user:
+            grant = authorization.validate_consent_request(end_user=current_user)
             return render_template(
                 'authorize.html',
                 grant=grant,
-                user=user,
             )
         else:
             return redirect(url_for('src.views.auth.login'))
 
     def post(self):
-        user = UserService.current_user()
-
         confirmed = request.form['confirm']
         if confirmed:
             # Granted by resource owner

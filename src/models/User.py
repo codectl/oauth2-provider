@@ -49,7 +49,7 @@ class User(OAuth2ResourceOwner):
         return all(role_name in [role.name for role in self.roles] for role_name in role_names)
 
     def __repr__(self):
-        return '<User {0}>'.format(self.id)
+        return "<User '{0}'>".format(self.username)
 
 
 UserRole = db.Table(

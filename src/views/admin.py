@@ -11,9 +11,10 @@ def before_request():
     """
     For each request, check whether user has Admin role.
     """
-    pass
+    print(2)
 
 
 @admin.route('/', methods=('GET', 'POST'))
 def index():
+    print(1)
     return render_template('pages/admin/index.html')

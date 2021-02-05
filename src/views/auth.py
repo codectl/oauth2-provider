@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for, session
 from flask_login import current_user, login_user
 
 from src import login_manager
@@ -51,7 +51,7 @@ def login():
         login_user(user)
 
         # Go to next page if defined
-        next_page = request.args.get('next')
+        next_page = session.get('next') or request.args.get('next')
         if next_page:
             return redirect(next_page)
 
@@ -65,7 +65,11 @@ def resource_authorization():
     Redirect user to login if user has no active session.
     """
 
-    if not current_user.is_authenticated:
-        view = current_app.view_functions[request.endpoint]
-        if not getattr(view, 'login_not_required', False):
-            return current_app.login_manager.unauthorized()
+    if request.endpoint:
+        if request.endpoint.startswith('api'):
+            # TODO some validation?
+            pass
+        else:
+            view = current_app.view_functions[request.endpoint]
+            if not getattr(view, 'login_not_required', False) and not current_user.is_authenticated():
+                return current_app.login_manager.unauthorized()

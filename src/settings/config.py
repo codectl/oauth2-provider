@@ -25,6 +25,9 @@ class BaseConfig:
     # Session secret
     SECRET_KEY = os.getenv('SECRET_KEY')
 
+    # Additional settings
+    USE_SESSION_FOR_NEXT = os.getenv('USE_SESSION_FOR_NEXT', False)
+
 
 class ProductionConfig(BaseConfig):
     ENV = os.getenv('FLASK_ENV', 'production')
@@ -36,7 +39,7 @@ class DevelopmentConfig(BaseConfig):
     ENV = os.getenv('FLASK_ENV', 'development')
     PORT = os.getenv('FLASK_RUN_PORT', 5001)
     DEBUG = True
-    LOG_LEVEL = 'INFO'
+    LOG_LEVEL = 'DEBUG'
 
 
 class TestingConfig(BaseConfig):

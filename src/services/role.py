@@ -15,7 +15,7 @@ class RoleService:
         db.session.add(role)
         db.session.commit()
 
-        current_app.logger.info("Created role '{0}'.".format(role.id))
+        current_app.logger.info("Created role '{0}'.".format(role.name))
 
         return role
 
