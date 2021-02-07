@@ -1,9 +1,9 @@
 from typing import List, Optional, Union
 
-from flask import current_app, session
+from flask import current_app
 
 from src import db
-from src.models.User import User, UserRole
+from src.models.User import User
 from src.services.role import RoleService
 
 
@@ -21,7 +21,7 @@ class UserService:
         # Setting default role for this user
         default_role = RoleService.default_role()
         if default_role:
-            user.roles.append(default_role)
+            cls.add_role(user.username, role_name=default_role.name)
 
         return user
 
@@ -55,13 +55,24 @@ class UserService:
         # return UserService.create(username=username)
         return True
 
-    @staticmethod
-    def create_user_role(**kwargs) -> UserRole:
-        user_role = UserRole(**kwargs)
+    @classmethod
+    def add_role(cls, username, role_name):
+        user = cls.find_by(username=username, fetch_one=True)
+        role = RoleService.find_by(name=role_name, fetch_one=True)
 
-        db.session.add(user_role)
-        db.session.commit()
+        if user and role:
+            user.roles.append(role)
+            db.session.commit()
 
-        current_app.logger.info("Created User Role ('{0}', '{1}').".format(user_role.user_id,
-                                                                           user_role.role_id))
-        return user_role
+            current_app.logger.info("Added role '{0}' to user '{1}'.".format(role_name, username))
+
+    @classmethod
+    def remove_role(cls, username, role_name):
+        user = cls.find_by(username=username, fetch_one=True)
+        role = RoleService.find_by(name=role_name, fetch_one=True)
+
+        if user and role:
+            user.roles.remove(role)
+            db.session.commit()
+
+            current_app.logger.info("Removed role '{0}' from user '{1}'.".format(role_name, username))

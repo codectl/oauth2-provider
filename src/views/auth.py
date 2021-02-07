@@ -55,9 +55,12 @@ def login():
         if next_page:
             return redirect(next_page)
 
-        return redirect(url_for('user.me'))
+        return redirect(url_for('auth.login'))
     else:
-        return render_template('pages/auth/authenticate.html')
+        if current_user.is_authenticated:
+            return redirect(url_for('user.me'))
+        else:
+            return render_template('pages/auth/authenticate.html')
 
 
 def resource_authorization():
@@ -71,5 +74,5 @@ def resource_authorization():
             pass
         else:
             view = current_app.view_functions[request.endpoint]
-            if not getattr(view, 'login_not_required', False) and not current_user.is_authenticated():
+            if not getattr(view, 'login_not_required', False) and not current_user.is_authenticated:
                 return current_app.login_manager.unauthorized()

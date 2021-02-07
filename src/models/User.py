@@ -1,11 +1,13 @@
 import datetime
 
+from flask_login import UserMixin
+
 from src import db
 from src.models.OAuth2ResourceOwner import OAuth2ResourceOwner
 from src.models.Role import Role
 
 
-class User(OAuth2ResourceOwner):
+class User(OAuth2ResourceOwner, UserMixin):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, db.ForeignKey(OAuth2ResourceOwner.id), primary_key=True)
@@ -22,18 +24,20 @@ class User(OAuth2ResourceOwner):
         'polymorphic_identity': 'user'
     }
 
+    @property
     def is_authenticated(self):
         """ Flask-Login field """
 
         return self.authenticated
 
+    @property
     def is_active(self):
         """ Flask-Login field """
 
         return self.active
 
-    @staticmethod
-    def is_anonymous():
+    @property
+    def is_anonymous(self):
         """ Flask-Login field """
 
         return False
@@ -52,7 +56,7 @@ class User(OAuth2ResourceOwner):
         return "<User '{0}'>".format(self.username)
 
 
-UserRole = db.Table(
+db.Table(
     'user_role',
     db.Model.metadata,
     db.Column('user_id', db.Integer, db.ForeignKey(User.id, ondelete='CASCADE'), primary_key=True),

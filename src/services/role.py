@@ -3,7 +3,8 @@ from typing import List, Optional, Union
 from flask import current_app
 
 from src import db
-from src.models.Role import Role, RolePermission
+from src.models.Role import Role
+from src.services.scope import ScopeService
 
 
 class RoleService:
@@ -32,24 +33,24 @@ class RoleService:
     def default_role(cls):
         return cls.find_by(name='User', fetch_one=True)
 
-    @staticmethod
-    def create_role_permission(**kwargs) -> RolePermission:
-        role_permission = RolePermission(**kwargs)
+    @classmethod
+    def add_scope(cls, role_name, scope_name):
+        role = cls.find_by(name=role_name, fetch_one=True)
+        scope = ScopeService.find_by(name=scope_name, fetch_one=True)
 
-        db.session.add(role_permission)
-        db.session.commit()
-
-        current_app.logger.info("Created Role Permission ('{0}', '{1}').".format(role_permission.role_id,
-                                                                                 role_permission.permission_id))
-
-        return role_permission
-
-    @staticmethod
-    def get_role_permission(role_id=None, permission_id=None) -> RolePermission:
-        return RolePermission.query.filter_by(role_id=role_id, permission_id=permission_id).first()
-
-    @staticmethod
-    def delete_role_permission(role_permission: RolePermission):
-        if role_permission:
-            db.session.delete(role_permission)
+        if role and scope:
+            role.scopes.append(scope)
             db.session.commit()
+
+            current_app.logger.info("Added scope '{0}' to role '{1}'.".format(scope_name, role_name))
+
+    @classmethod
+    def remove_scope(cls, role_name, scope_name):
+        role = cls.find_by(name=role_name, fetch_one=True)
+        scope = ScopeService.find_by(name=scope_name, fetch_one=True)
+
+        if role and scope:
+            role.scopes.remove(scope)
+            db.session.commit()
+
+            current_app.logger.info("Removed scope '{0}' from role '{1}'.".format(scope_name, role_name))

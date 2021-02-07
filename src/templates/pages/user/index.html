@@ -7,11 +7,11 @@
 {% block title %}Homepage{% endblock %}
 
 {% block body %}
-    <div>Welcome {{ current_user }}</div>
-    <div>{{ current_user.roles }}</div>
+    <div>Welcome <b>{{ current_user.username }}</b></div>
+    <div>Your current roles are:</div>
     <ul>
         {% for role in current_user.roles %}
-            <li>{{ role }}</li>
+            <li>{{ role.name }}</li>
         {% endfor %}
     </ul>
 {% endblock %}

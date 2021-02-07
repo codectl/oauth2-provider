@@ -23,7 +23,6 @@ def roles_required(*role_names):
     def wrapper(view_function):
         @wraps(view_function)
         def decorator(*args, **kwargs):
-            print(current_user.roles)
             # User must have the required roles
             if not current_user.has_roles(*role_names):
                 abort(403)

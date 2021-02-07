@@ -1,5 +1,5 @@
 from src import db
-from src.models.Permission import Permission
+from src.models.Scope import Scope
 
 
 class Role(db.Model):
@@ -10,15 +10,15 @@ class Role(db.Model):
     description = db.Column(db.String(100), nullable=True)
 
     # Relationships
-    permissions = db.relationship(Permission, secondary='role_permission')
+    scopes = db.relationship(Scope, secondary='role_scope')
 
     def __repr__(self):
         return "<Role '{0}'>".format(self.name)
 
 
-RolePermission = db.Table(
-    'role_permission',
+db.Table(
+    'role_scope',
     db.Model.metadata,
     db.Column('role_id', db.Integer, db.ForeignKey(Role.id, ondelete='CASCADE'), primary_key=True),
-    db.Column('permission_id', db.Integer, db.ForeignKey(Permission.id, ondelete='CASCADE'), primary_key=True)
+    db.Column('scope_id', db.Integer, db.ForeignKey(Scope.id, ondelete='CASCADE'), primary_key=True)
 )
