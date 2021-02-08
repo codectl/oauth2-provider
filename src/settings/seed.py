@@ -7,7 +7,6 @@ from src.services.user import UserService
 
 
 def seed():
-
     # Seed Scopes
     if not ScopeService.find_by():
         current_app.logger.info('* Seeding scopes *')
@@ -45,13 +44,28 @@ def seed():
 
         current_app.logger.info('... Users seeded.')
 
-    # Seed dummy Client app
+    # Seed dummy client app
     if not OAuth2ClientService.find_by():
         current_app.logger.info('* Seeding OAuth2 clients *')
 
         # Admin
         OAuth2ClientService.create(
-            username='admin'
+            resource_owner_id=UserService.find_by(username='admin', fetch_one=True).id,
+            client_metadata={
+                'client_name': 'dummy',
+                'client_uri': '',
+                'grant_types': [
+                    'authorization_code',
+                    'implicit',
+                    'password'
+                ],
+                'redirect_uris': [
+                    '/support/app/callback'
+                ],
+                'response_types': [],
+                'scope': '',
+                'token_endpoint_auth_method': 'client_secret_basic'
+            }
         )
 
         current_app.logger.info('... OAuth2 Clients seeded.')

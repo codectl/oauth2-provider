@@ -1,4 +1,4 @@
-import datetime
+import time
 from typing import List, Optional, Union
 
 from flask import current_app
@@ -12,13 +12,14 @@ class OAuth2ClientService:
 
     @staticmethod
     def create(**kwargs) -> OAuth2Client:
+        client_metadata = kwargs.pop('client_metadata', {})
         client = OAuth2Client(
             client_id=kwargs.pop('client_id', gen_salt(24)),
-            client_id_issued_at=kwargs.pop('client_id_issued_at', datetime.datetime.utcnow),
+            client_id_issued_at=kwargs.pop('client_id_issued_at', int(time.time())),
             **kwargs
         )
 
-        client.set_client_metadata(kwargs.get('client_metadata', {}))
+        client.set_client_metadata(client_metadata)
 
         # Skip secret if no client authentication method is set
         if kwargs.get('token_endpoint_auth_method') == 'none':
@@ -29,7 +30,7 @@ class OAuth2ClientService:
         db.session.add(client)
         db.session.commit()
 
-        current_app.logger.info("Created OAuth2 client '{0}'.".format(client.client_id))
+        current_app.logger.info("Created OAuth2 client '{0}'.".format(client_metadata.get('client_name')))
 
         return client
 
