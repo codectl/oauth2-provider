@@ -28,7 +28,7 @@ def query_client(client_id):
 
 def save_token(token_data, request):
     if request.user:
-        resource_owner_id = request.user.get_user_id()
+        resource_owner_id = request.user.get_id()
     else:
         # client_credentials grant_type
         resource_owner_id = request.client.user_id

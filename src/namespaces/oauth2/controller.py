@@ -4,7 +4,7 @@ from flask_restplus import Namespace, Resource
 
 from src.oauth2 import authorization
 
-ns = Namespace('oauth2', description='OAuth2 requests.')
+ns = Namespace('oauth2', description='OAuth2 API requests.')
 
 
 @ns.route('/authorize')
@@ -19,7 +19,7 @@ class Authorize(Resource):
                 grant=grant,
             )
         else:
-            return redirect(url_for('src.views.auth.login'))
+            return redirect(url_for('auth.login_route'))
 
     def post(self):
         confirmed = request.form['confirm']
@@ -36,7 +36,7 @@ class Token(Resource):
 
     @staticmethod
     def post():
-        return authorization.create_token_response()
+        return authorization.create_token_response(request=request)
 
 
 @ns.route('/revoke')

@@ -1,0 +1,16 @@
+{% extends 'layouts/base.html' %}
+
+{% block script %}
+    {{ super() }}
+{% endblock %}
+
+{% block title %}Developer{% endblock %}
+
+{% block body %}
+    <div>Welcome <b>{{ current_user.username }}</b></div>
+    {% block clients %}
+        <a href="{{ url_for('developer.clients_route') }}">
+            Clients
+        </a>
+    {% endblock %}
+{% endblock %}

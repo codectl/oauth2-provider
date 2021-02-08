@@ -38,7 +38,7 @@ class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
 
 class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
     def authenticate_user(self, username, password):
-        user = next(UserService.find_by(username=username))
+        user = UserService.find_by(username=username, fetch_one=True)
         if user and UserService.authenticate(username, password):
             return user
 

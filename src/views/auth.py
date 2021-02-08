@@ -23,13 +23,13 @@ def load_user(user_id):
 
 @auth.route('/')
 @login_not_required
-def index():
-    return redirect(url_for('auth.login'))
+def index_route():
+    return redirect(url_for('auth.login_route'))
 
 
 @auth.route('/login', methods=('GET', 'POST'))
 @login_not_required
-def login():
+def login_route():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -38,7 +38,7 @@ def login():
             flash('Invalid user key or password. Please try again.', 'danger')
             current_app.logger.warn("Invalid credentials attempted for username '{0}'.".format(username))
 
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login_route'))
 
         # Find or create user
         user = UserService.find_by(username=username, fetch_one=True)
@@ -55,10 +55,10 @@ def login():
         if next_page:
             return redirect(next_page)
 
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.login_route'))
     else:
         if current_user.is_authenticated:
-            return redirect(url_for('user.me'))
+            return redirect(url_for('user.me_route'))
         else:
             return render_template('pages/auth/authenticate.html')
 

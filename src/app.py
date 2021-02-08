@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, redirect
+from flask import Flask, redirect, url_for
 
 from src import db, login_manager
 from src.namespaces.oauth2 import oauth2_namespace
@@ -45,7 +45,7 @@ def setup_app(app):
     db.init_app(app)
 
     # LoginManager setup
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = 'auth.login_route'
     login_manager.init_app(app)
 
     # Create tables if they do not exist already
@@ -54,7 +54,7 @@ def setup_app(app):
         seed()
 
     # Redirect root point to app context root
-    app.add_url_rule('/', 'index', lambda: redirect('auth.login'))
+    app.add_url_rule('/', 'index', lambda: redirect(url_for('auth.login_route')))
 
     # Initialize and configure OAuth2
     config_oauth(app)

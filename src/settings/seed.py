@@ -17,10 +17,10 @@ def seed():
     # Seed Roles
     if not RoleService.find_by():
         current_app.logger.info('* Seeding roles *')
-        RoleService.create(name='Admin',
-                           description='Administrative operations role')
-        RoleService.create(name='User',
-                           description='Default user role.')
+        RoleService.create(name='Admin', description='Role for administrative purposes.')
+        RoleService.create(name='User', description='Default user role. Every user should belong to this role.')
+        RoleService.create(name='Developer', description='Role for developers. Granting this role, allows the user to '
+                                                         'create new clients.')
 
         # Add scopes to roles
         RoleService.add_scope(role_name='Admin', scope_name='view:profile')
@@ -28,9 +28,18 @@ def seed():
 
         current_app.logger.info('... Roles seeded.')
 
-    # Admin user
+    # Seed Users
     if not UserService.find_by():
         current_app.logger.info('* Seeding users *')
+
+        # Admin
         UserService.create(username='admin')
         UserService.add_role(username='admin', role_name='Admin')
+        UserService.add_role(username='admin', role_name='User')
+        UserService.add_role(username='admin', role_name='Developer')
+
+        # Test
+        UserService.create(username='test')
+        UserService.add_role(username='test', role_name='User')
+
         current_app.logger.info('... Users seeded.')

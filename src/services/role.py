@@ -49,7 +49,7 @@ class RoleService:
         role = cls.find_by(name=role_name, fetch_one=True)
         scope = ScopeService.find_by(name=scope_name, fetch_one=True)
 
-        if role and scope:
+        if role and scope and scope not in role.scopes:
             role.scopes.remove(scope)
             db.session.commit()
 

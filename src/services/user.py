@@ -60,7 +60,7 @@ class UserService:
         user = cls.find_by(username=username, fetch_one=True)
         role = RoleService.find_by(name=role_name, fetch_one=True)
 
-        if user and role:
+        if user and role and role not in user.roles:
             user.roles.append(role)
             db.session.commit()
 

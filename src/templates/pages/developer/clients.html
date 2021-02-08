@@ -1,0 +1,23 @@
+{% extends 'pages/developer/index.html' %}
+
+{% block clients %}
+    {% if clients %}
+        <br>
+        <div>Your current clients are:</div>
+        <div>
+            <ul>
+                {% for client in clients %}
+                    <li>
+                        <div>Client Id: {{ client.client_id }}</div>
+                        <div>Client Secret: {{ client.client_secret }}</div>
+                        <div>Metadata: {{ client._client_metadata }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div>---</div>
+    <br>
+    {% include 'pages/developer/partials/create_client.html' %}
+{% endblock %}
