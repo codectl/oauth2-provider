@@ -1,4 +1,4 @@
-from src.models.OAuth2AuthorizationCode import OAuth2AuthorizationCode
+from src.models.oauth2.OAuth2AuthorizationCode import OAuth2AuthorizationCode
 
 
 def create_authorization_code(code, request):

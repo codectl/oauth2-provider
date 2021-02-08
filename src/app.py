@@ -5,6 +5,7 @@ from flask import Flask, redirect, url_for
 
 from src import db, login_manager
 from src.namespaces.oauth2 import oauth2_namespace
+from src.namespaces.support import support_namespace
 from src.oauth2 import config_oauth
 from src.settings.config import config_by_name
 from src.settings.seed import seed
@@ -68,6 +69,7 @@ def setup_app(app):
 
     # ... and namespaces
     api.add_namespace(oauth2_namespace, path='/oauth2')
+    api.add_namespace(support_namespace, path='/support')
 
     # Additional configurations
     app.before_request_funcs[None] = [resource_authorization]

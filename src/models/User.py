@@ -3,7 +3,7 @@ import datetime
 from flask_login import UserMixin
 
 from src import db
-from src.models.OAuth2ResourceOwner import OAuth2ResourceOwner
+from src.models.oauth2.OAuth2ResourceOwner import OAuth2ResourceOwner
 from src.models.Role import Role
 
 

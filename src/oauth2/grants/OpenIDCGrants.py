@@ -1,7 +1,7 @@
 from authlib.oidc.core import grants, UserInfo
 
 from src.oauth2 import db
-from src.models.OAuth2AuthorizationCode import OAuth2AuthorizationCode
+from src.models.oauth2.OAuth2AuthorizationCode import OAuth2AuthorizationCode
 from src.oauth2.common import create_authorization_code
 
 DUMMY_JWT_CONFIG = {

@@ -1,8 +1,8 @@
 from authlib.oauth2.rfc6749 import grants
 
 from src import db
-from src.models.OAuth2AuthorizationCode import OAuth2AuthorizationCode
-from src.models.OAuth2Token import OAuth2Token
+from src.models.oauth2.OAuth2AuthorizationCode import OAuth2AuthorizationCode
+from src.models.oauth2.OAuth2Token import OAuth2Token
 from src.oauth2.common import create_authorization_code
 from src.services.user import UserService
 

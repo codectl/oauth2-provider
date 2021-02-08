@@ -1,5 +1,6 @@
 from flask import current_app
 
+from src.services.oauth2.client import OAuth2ClientService
 from src.services.role import RoleService
 from src.services.scope import ScopeService
 from src.services.user import UserService
@@ -43,3 +44,14 @@ def seed():
         UserService.add_role(username='test', role_name='User')
 
         current_app.logger.info('... Users seeded.')
+
+    # Seed dummy Client app
+    if not OAuth2ClientService.find_by():
+        current_app.logger.info('* Seeding OAuth2 clients *')
+
+        # Admin
+        OAuth2ClientService.create(
+            username='admin'
+        )
+
+        current_app.logger.info('... OAuth2 Clients seeded.')
