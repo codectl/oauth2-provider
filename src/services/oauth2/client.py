@@ -4,8 +4,8 @@ from typing import List, Optional, Union
 from flask import current_app
 from werkzeug.security import gen_salt
 
-from src.models.oauth2.OAuth2Client import OAuth2Client
 from src import db
+from src.models.oauth2.OAuth2Client import OAuth2Client
 
 
 class OAuth2ClientService:

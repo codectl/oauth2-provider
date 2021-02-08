@@ -1,22 +1,24 @@
-<p>The application <strong>{{ grant.client.client_name }}</strong> is requesting:
-    <strong>{{ grant.request.scope }}</strong>
-</p>
+{% extends 'layouts/base.html' %}
 
-<p>
-    from You - a.k.a. <strong>{{ user.username }}</strong>
-</p>
+{% block script %}
+    {{ super() }}
+{% endblock %}
 
-<form action="" method="post">
-    <label>
-        <input type="checkbox" name="confirm">
-        <span>Consent?</span>
-    </label>
-    {% if not user %}
-        <p>You haven't logged in. Log in with:</p>
-        <div>
-            <input type="text" name="username">
-        </div>
-    {% endif %}
-    <br>
-    <button>Submit</button>
-</form>
+{% block title %}Authorize{% endblock %}
+
+{% block body %}
+    <p>The application <strong>{{ grant.client.client_name }}</strong> is requesting:
+        <strong>{{ grant.request.scope }}</strong>
+    </p>
+
+    <p><strong>{{ current_user.username }}</strong></p>
+
+    <form action="{{ url_for('auth.authorize_route') }}" method="post">
+        <label>
+            <input type="checkbox" name="confirm">
+            <span>Consent?</span>
+        </label>
+        <br>
+        <button>Submit</button>
+    </form>
+{% endblock %}

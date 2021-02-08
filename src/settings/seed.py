@@ -60,9 +60,12 @@ def seed():
                     'password'
                 ],
                 'redirect_uris': [
-                    '/support/app/callback'
+                    '/api/support/client/callback'
                 ],
-                'response_types': [],
+                'response_types': [
+                    'code',
+                    'token'
+                ],
                 'scope': '',
                 'token_endpoint_auth_method': 'client_secret_basic'
             }

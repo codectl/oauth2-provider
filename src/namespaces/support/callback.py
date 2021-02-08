@@ -1,3 +1,4 @@
+from flask import request
 from flask_restplus import Resource
 
 
@@ -7,4 +8,4 @@ class ClientCallback(Resource):
     """
 
     def get(self):
-        pass
+        return request.args

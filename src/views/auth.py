@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, flash, redirect, render_template, requ
 from flask_login import current_user, login_user
 
 from src import login_manager
+from src.oauth2 import authorization
 from src.services.user import UserService
 
 auth = Blueprint('auth', __name__)
@@ -51,7 +52,7 @@ def login_route():
         login_user(user)
 
         # Go to next page if defined
-        next_page = session.get('next') or request.args.get('next')
+        next_page = session.pop('next') or request.args.get('next')
         if next_page:
             return redirect(next_page)
 
@@ -60,7 +61,24 @@ def login_route():
         if current_user.is_authenticated:
             return redirect(url_for('user.me_route'))
         else:
+            # Keep the 'next' param in session
+            session['next'] = request.args.get('next')
             return render_template('pages/auth/authenticate.html')
+
+
+@auth.route('/authorize', methods=('GET', 'POST'))
+def authorize_route():
+    if request.method == 'POST':
+        pass
+    else:
+        if current_user:
+            grant = authorization.validate_consent_request(request=request, end_user=current_user)
+            if grant.request.scope:
+                return render_template('pages/auth/authorize.html', grant=grant)
+            else:
+                return authorization.create_authorization_response(grant_user=current_user)
+        else:
+            return redirect(url_for('auth.login_route'))
 
 
 def resource_authorization():
