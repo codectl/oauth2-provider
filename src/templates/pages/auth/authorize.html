@@ -7,18 +7,19 @@
 {% block title %}Authorize{% endblock %}
 
 {% block body %}
+    <p>Hello <strong>{{ current_user.username }}</strong>.</p>
+
     <p>The application <strong>{{ grant.client.client_name }}</strong> is requesting:
         <strong>{{ grant.request.scope }}</strong>
     </p>
 
-    <p><strong>{{ current_user.username }}</strong></p>
-
-    <form action="{{ url_for('auth.authorize_route') }}" method="post">
+    <form action="" method="post">
         <label>
             <input type="checkbox" name="confirm">
             <span>Consent?</span>
         </label>
         <br>
+
         <button>Submit</button>
     </form>
 {% endblock %}

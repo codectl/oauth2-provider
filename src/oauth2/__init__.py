@@ -7,7 +7,6 @@ from authlib.integrations.sqla_oauth2 import (
 )
 
 from src import db
-from src.models.oauth2.OAuth2Client import OAuth2Client
 from src.models.oauth2.OAuth2Token import OAuth2Token
 from src.oauth2.grants.OAuth2Grants import (
     grants,
@@ -20,25 +19,29 @@ from src.oauth2.grants.OpenIDCGrants import (
     OpenIDHybridGrant,
     OpenIDImplicitGrant
 )
+from src.services.oauth2.client import OAuth2ClientService
+from src.services.oauth2.token import OAuth2TokenService
 
 
 def query_client(client_id):
-    return OAuth2Client.query.filter_by(client_id=client_id).first()
+    return OAuth2ClientService.find_by(client_id=client_id, fetch_one=True)
 
 
 def save_token(token_data, request):
     if request.user:
         resource_owner_id = request.user.get_id()
     else:
-        # client_credentials grant_type
-        resource_owner_id = request.client.user_id
-    token = OAuth2Token(
+        # client_credentials grant_type, the resource owner
+        # becomes the one linked to the client
+        resource_owner_id = request.client.resource_owner.id
+
+    # TODO : delete authorization code
+
+    OAuth2TokenService.create(
         client_id=request.client.client_id,
         resource_owner_id=resource_owner_id,
         **token_data
     )
-    db.session.add(token)
-    db.session.commit()
 
 
 authorization = AuthorizationServer()

@@ -36,6 +36,8 @@ class OAuth2ClientService:
 
     @staticmethod
     def get(client_id) -> Optional[OAuth2Client]:
+        # client_id for this case refers to 'id' attribute
+        # as opposed to 'client_id'
         return OAuth2Client.query.get(client_id)
 
     @staticmethod

@@ -9,4 +9,4 @@ class OAuth2AuthorizationCode(db.Model, OAuth2AuthorizationCodeMixin):
     id = db.Column(db.Integer, primary_key=True)
     resource_owner_id = db.Column(
         db.Integer, db.ForeignKey('oauth2_resource_owner.id', ondelete='CASCADE'))
-    user = db.relationship('OAuth2ResourceOwner')
+    resource_owner = db.relationship('OAuth2ResourceOwner')

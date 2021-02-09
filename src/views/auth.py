@@ -61,15 +61,14 @@ def login_route():
         if current_user.is_authenticated:
             return redirect(url_for('user.me_route'))
         else:
-            # Keep the 'next' param in session
-            session['next'] = request.args.get('next')
             return render_template('pages/auth/authenticate.html')
 
 
 @auth.route('/authorize', methods=('GET', 'POST'))
 def authorize_route():
     if request.method == 'POST':
-        pass
+        grant_user = current_user if request.form.get('confirm') else None
+        return authorization.create_authorization_response(grant_user=grant_user)
     else:
         if current_user:
             grant = authorization.validate_consent_request(request=request, end_user=current_user)

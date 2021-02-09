@@ -1,8 +1,6 @@
 from authlib.oidc.core import grants, UserInfo
 
-from src.oauth2 import db
-from src.models.oauth2.OAuth2AuthorizationCode import OAuth2AuthorizationCode
-from src.oauth2.common import create_authorization_code
+from src.services.oauth2.code import OAuth2AuthorizationCodeService
 
 DUMMY_JWT_CONFIG = {
     'key': 'secret-key',
@@ -13,13 +11,15 @@ DUMMY_JWT_CONFIG = {
 
 
 def exists_nonce(nonce, req):
-    exists = OAuth2AuthorizationCode.query.filter_by(
-        client_id=req.client_id, nonce=nonce
-    ).first()
+    exists = OAuth2AuthorizationCodeService.find_by(
+        client_id=req.client_id,
+        nonce=nonce,
+        fetch_one=True
+    )
     return bool(exists)
 
 
-def generate_user_info(user, scope):
+def generate_user_info(user):
     return UserInfo(sub=str(user.id), name=user.username)
 
 
@@ -47,10 +47,16 @@ class OpenIDImplicitGrant(grants.OpenIDImplicitGrant):
 
 class OpenIDHybridGrant(grants.OpenIDHybridGrant):
     def save_authorization_code(self, code, request):
-        code = create_authorization_code(code=code, request=request)
-        db.session.add(code)
-        db.session.commit()
-        return code
+        return OAuth2AuthorizationCodeService.create(
+            code=code,
+            client_id=request.client.client_id,
+            redirect_uri=request.redirect_uri,
+            scope=request.scope,
+            resource_owner_id=request.user.id,
+            code_challenge=request.data.get('code_challenge'),
+            code_challenge_method=request.data.get('code_challenge_method'),
+            nonce=request.data.get('nonce')
+        )
 
     def exists_nonce(self, nonce, request):
         return exists_nonce(nonce, request)
