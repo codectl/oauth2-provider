@@ -1,17 +1,13 @@
 from authlib.oauth2.rfc6749 import grants
+from flask import current_app
 
-from src import db
-from src.models.oauth2.OAuth2Token import OAuth2Token
 from src.services.user import UserService
 from src.services.oauth2.code import OAuth2AuthorizationCodeService
+from src.services.oauth2.token import OAuth2TokenService
 
 
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
-    TOKEN_ENDPOINT_AUTH_METHODS = [
-        'client_secret_basic',
-        'client_secret_post',
-        'none',
-    ]
+    TOKEN_ENDPOINT_AUTH_METHODS = current_app.config.get('TOKEN_ENDPOINT_AUTH_METHODS', [])
 
     def save_authorization_code(self, code, request):
         return OAuth2AuthorizationCodeService.create(
@@ -36,9 +32,7 @@ class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
             return auth_code
 
     def delete_authorization_code(self, authorization_code):
-        OAuth2AuthorizationCodeService.delete(
-            authorization_code=OAuth2AuthorizationCodeService.find_by(code=authorization_code, fetch_one=True)
-        )
+        OAuth2AuthorizationCodeService.delete(authorization_code=authorization_code)
 
     def authenticate_user(self, authorization_code):
         return UserService.get(authorization_code.resource_owner.id)
@@ -52,15 +46,16 @@ class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
 
 
 class RefreshTokenGrant(grants.RefreshTokenGrant):
+    INCLUDE_NEW_REFRESH_TOKEN = current_app.config.get('INCLUDE_NEW_REFRESH_TOKEN', False)
+
     def authenticate_refresh_token(self, refresh_token):
-        token = OAuth2Token.query.filter_by(refresh_token=refresh_token).first()
+        token = OAuth2TokenService.find_by(refresh_token=refresh_token, fetch_one=True)
         if token and token.is_refresh_token_active():
             return token
 
     def authenticate_user(self, credential):
-        return UserService.get(credential.user_id)
+        return UserService.get(credential.resource_owner.id)
 
     def revoke_old_credential(self, credential):
-        credential.revoked = True
-        db.session.add(credential)
-        db.session.commit()
+        OAuth2TokenService.update(credential.id, revoked=True)
+

@@ -28,6 +28,17 @@ class OAuth2TokenService:
         query = OAuth2Token.query.filter_by(**filters)
         return query.all() if not fetch_one else query.one_or_none()
 
+    @classmethod
+    def update(cls, token_id, **kwargs):
+        token = cls.get(token_id)
+        for key, value in kwargs.items():
+            if hasattr(token, key):
+                setattr(token, key, value)
+        db.session.commit()
+
+        current_app.logger.info("Updated token '{0}' with the following attributes: '{1}'."
+                                .format(token.access_token, kwargs))
+
     @staticmethod
     def delete(token: OAuth2Token):
         if token:

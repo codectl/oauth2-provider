@@ -57,7 +57,8 @@ def seed():
                 'grant_types': [
                     'authorization_code',
                     'implicit',
-                    'password'
+                    'password',
+                    'refresh_token'
                 ],
                 'redirect_uris': [
                     '/api/support/client/callback'
@@ -66,7 +67,7 @@ def seed():
                     'code',
                     'token'
                 ],
-                'scope': '',
+                'scope': 'offline_access',
                 'token_endpoint_auth_method': 'client_secret_basic'
             }
         )

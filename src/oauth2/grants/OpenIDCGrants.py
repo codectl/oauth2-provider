@@ -51,6 +51,7 @@ class OpenIDHybridGrant(grants.OpenIDHybridGrant):
             code=code,
             client_id=request.client.client_id,
             redirect_uri=request.redirect_uri,
+            response_type=request.response_type,
             scope=request.scope,
             resource_owner_id=request.user.id,
             code_challenge=request.data.get('code_challenge'),

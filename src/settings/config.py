@@ -26,7 +26,22 @@ class BaseConfig:
     SECRET_KEY = os.getenv('SECRET_KEY')
 
     # Additional settings
-    USE_SESSION_FOR_NEXT = os.getenv('USE_SESSION_FOR_NEXT', False)
+
+    TOKEN_ENDPOINT_AUTH_METHODS = [
+        'client_secret_basic',
+        'client_secret_post',
+        'none',
+    ]
+
+    # don't use session to keep the value of 'next'.
+    # Instead the the value is kept on the url.
+    USE_SESSION_FOR_NEXT = bool(os.getenv('USE_SESSION_FOR_NEXT', False))
+
+    # include refresh token when issuing an access token.
+    OAUTH2_REFRESH_TOKEN_GENERATOR = bool(os.getenv('OAUTH2_REFRESH_TOKEN_GENERATOR', False))
+
+    # include a new refresh token when refreshing an access token
+    INCLUDE_NEW_REFRESH_TOKEN = bool(os.getenv('INCLUDE_NEW_REFRESH_TOKEN', False))
 
 
 class ProductionConfig(BaseConfig):
