@@ -66,6 +66,11 @@ def config_oauth(app):
     authorization.register_grant(OpenIDImplicitGrant)
     authorization.register_grant(OpenIDHybridGrant)
 
+    # OAuth2 server configurations
+    with app.app_context():
+        AuthorizationCodeGrant.TOKEN_ENDPOINT_AUTH_METHODS = app.config.get('TOKEN_ENDPOINT_AUTH_METHODS', [])
+        RefreshTokenGrant.INCLUDE_NEW_REFRESH_TOKEN = app.config.get('INCLUDE_NEW_REFRESH_TOKEN', False)
+
     # support revocation
     revocation_cls = create_revocation_endpoint(db.session, OAuth2Token)
     authorization.register_endpoint(revocation_cls)

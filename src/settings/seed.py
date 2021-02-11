@@ -58,7 +58,8 @@ def seed():
                     'authorization_code',
                     'implicit',
                     'password',
-                    'refresh_token'
+                    'refresh_token',
+                    'client_credentials'
                 ],
                 'redirect_uris': [
                     '/api/support/client/callback'
@@ -67,7 +68,7 @@ def seed():
                     'code',
                     'token'
                 ],
-                'scope': 'offline_access',
+                'scope': 'openid test',
                 'token_endpoint_auth_method': 'client_secret_basic'
             }
         )

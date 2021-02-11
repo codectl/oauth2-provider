@@ -40,7 +40,6 @@ def setup_app(app):
     """
     Setup the app
     """
-    from flask.logging import default_handler
 
     # Link db to app
     db.init_app(app)

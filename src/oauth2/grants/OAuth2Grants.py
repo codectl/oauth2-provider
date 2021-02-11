@@ -7,8 +7,6 @@ from src.services.oauth2.token import OAuth2TokenService
 
 
 class AuthorizationCodeGrant(grants.AuthorizationCodeGrant):
-    TOKEN_ENDPOINT_AUTH_METHODS = current_app.config.get('TOKEN_ENDPOINT_AUTH_METHODS', [])
-
     def save_authorization_code(self, code, request):
         return OAuth2AuthorizationCodeService.create(
             code=code,
@@ -46,8 +44,6 @@ class PasswordGrant(grants.ResourceOwnerPasswordCredentialsGrant):
 
 
 class RefreshTokenGrant(grants.RefreshTokenGrant):
-    INCLUDE_NEW_REFRESH_TOKEN = current_app.config.get('INCLUDE_NEW_REFRESH_TOKEN', False)
-
     def authenticate_refresh_token(self, refresh_token):
         token = OAuth2TokenService.find_by(refresh_token=refresh_token, fetch_one=True)
         if token and token.is_refresh_token_active():

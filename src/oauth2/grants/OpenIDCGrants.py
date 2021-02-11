@@ -31,7 +31,7 @@ class OpenIDCode(grants.OpenIDCode):
         return DUMMY_JWT_CONFIG
 
     def generate_user_info(self, user, scope):
-        return generate_user_info(user, scope)
+        return generate_user_info(user)
 
 
 class OpenIDImplicitGrant(grants.OpenIDImplicitGrant):
